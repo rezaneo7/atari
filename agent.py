@@ -62,7 +62,7 @@ class ATARI:
             action_values = self.net(state, model='online')
             action_idx = torch.argmax(action_values, axis=1).item()
 
-        if(curr_step < self.eps_num_random_action):
+        if(self.curr_step < self.eps_num_random_action):
           self.exploration_rate = 1
         else:
           self.exploration_rate -= self.eps_interval
