@@ -12,6 +12,7 @@ from agent import ATARI
 from wrappers import ResizeObservation, SkipFrame
 
 
+env = gym.make("BreakoutNoFrameskip-v4")
 
 
 # Apply Wrappers to environment
