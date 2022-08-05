@@ -10,7 +10,7 @@ class ATARI:
     def __init__(self, state_dim, action_dim, save_dir, checkpoint=None):
         self.state_dim = state_dim
         self.action_dim = action_dim
-        self.memory = deque(maxlen=100000)
+        self.memory = deque(maxlen=150000)
         self.batch_size = 32
 
         self.exploration_rate = 1
@@ -20,7 +20,7 @@ class ATARI:
 
         self.curr_step = 0
         self.burnin = 1e5  # min. experiences before training
-        self.learn_every = 3   # no. of experiences between updates to Q_online
+        self.learn_every = 4   # no. of experiences between updates to Q_online
         self.sync_every = 1e4   # no. of experiences between Q_target & Q_online sync
 
         self.save_every = 5e5   # no. of experiences between saving ATARI Net
@@ -78,8 +78,8 @@ class ATARI:
         reward (float),
         done(bool))
         """
-        state = torch.FloatTensor(state).cuda() if self.use_cuda else torch.FloatTensor(state)
-        next_state = torch.FloatTensor(next_state).cuda() if self.use_cuda else torch.FloatTensor(next_state)
+        state = torch.tensor(state*255, dtype=torch.uint8).cuda() if self.use_cuda else torch.FloatTensor(state)
+        next_state = torch.tensor(next_state*255, dtype=torch.uint8).cuda() if self.use_cuda else torch.FloatTensor(next_state)
         action = torch.LongTensor([action]).cuda() if self.use_cuda else torch.LongTensor([action])
         reward = torch.DoubleTensor([reward]).cuda() if self.use_cuda else torch.DoubleTensor([reward])
         done = torch.BoolTensor([done]).cuda() if self.use_cuda else torch.BoolTensor([done])
@@ -93,7 +93,7 @@ class ATARI:
         """
         batch = random.sample(self.memory, self.batch_size)
         state, next_state, action, reward, done = map(torch.stack, zip(*batch))
-        return state, next_state, action.squeeze(), reward.squeeze(), done.squeeze()
+        return torch.FloatTensor(state/255.0), torch.FloatTensor(next_state/255.0), action.squeeze(), reward.squeeze(), done.squeeze()
 
 
     def td_estimate(self, state, action):
