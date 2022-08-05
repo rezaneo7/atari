@@ -21,7 +21,7 @@ env.reset()
 save_dir = Path('checkpoints') / datetime.datetime.now().strftime('%Y-%m-%dT%H-%M-%S')
 save_dir.mkdir(parents=True)
 
-checkpoint = Path('checkpoints/2020-10-21T18-25-27/atari.chkpt')
+checkpoint = Path('checkpoints/2022-08-05T20-24-17/atari_net_5.chkpt')
 atari = ATARI(state_dim=(4, 84, 84), action_dim=env.action_space.n, save_dir=save_dir, checkpoint=checkpoint)
 atari.exploration_rate = atari.exploration_rate_min
 
