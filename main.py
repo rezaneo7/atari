@@ -9,18 +9,16 @@ from gym.wrappers import FrameStack, GrayScaleObservation, TransformObservation
 
 from metrics import MetricLogger
 from agent import ATARI
-from wrappers import ResizeObservation, SkipFrame
+from wrappers import ResizeObservation, SkipFrame, make_atari, wrap_deepmind
 
 
 env = gym.make("BreakoutNoFrameskip-v4")
 
+# Use the Baseline Atari environment because of Deepmind helper functions
+env = make_atari("BreakoutNoFrameskip-v4")
 
-# Apply Wrappers to environment
-env = SkipFrame(env, skip=4)
-env = GrayScaleObservation(env, keep_dim=False)
-env = ResizeObservation(env, shape=84)
-env = TransformObservation(env, f=lambda x: x / 255.)
-env = FrameStack(env, num_stack=4)
+# Warp the frames, grey scale, stake four frame and scale to smaller ratio
+env = wrap_deepmind(env, frame_stack=True, scale=True)
 
 env.reset()
 
@@ -64,7 +62,7 @@ for e in range(episodes):
         state = next_state
 
         # 10. Check if end of game
-        if done or info['flag_get']:
+        if done:
             break
 
     logger.log_episode()
