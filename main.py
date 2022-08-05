@@ -1,4 +1,12 @@
 import os
+import torch
+import torch.nn as nn
+import torchvision.transforms as transforms
+import torch.nn.functional as F
+import torchvision
+import torch.backends.cudnn as cudnn
+import numpy as np
+
 os.environ['KMP_DUPLICATE_LIB_OK']='True'
 
 import random, datetime
@@ -50,6 +58,10 @@ for e in range(episodes):
         next_state, reward, done, info = env.step(action)
 
         # 6. Remember
+        state_l = np.transpose((np.array(state)), (2, 0, 1))
+        next_state_l = np.transpose((np.array(next_state)), (2, 0, 1))
+
+
         atari.cache(state, next_state, action, reward, done)
 
         # 7. Learn
