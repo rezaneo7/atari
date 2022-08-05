@@ -93,7 +93,7 @@ class ATARI:
         """
         batch = random.sample(self.memory, self.batch_size)
         state, next_state, action, reward, done = map(torch.stack, zip(*batch))
-        return torch.FloatTensor(state/255.0), torch.FloatTensor(next_state/255.0), action.squeeze(), reward.squeeze(), done.squeeze()
+        return (state/255.0).to(torch.float32), (next_state/255.0).to(torch.float32), action.squeeze(), reward.squeeze(), done.squeeze()
 
 
     def td_estimate(self, state, action):
