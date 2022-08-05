@@ -44,7 +44,7 @@ episodes = 40000
 for e in range(episodes):
 
     state = env.reset()
-
+    state_l = np.transpose((np.array(state)), (2, 0, 1))
     # Play the game!
     while True:
 
@@ -52,17 +52,18 @@ for e in range(episodes):
         # env.render()
 
         # 4. Run agent on the state
-        action = atari.act(state)
+        
+
+        action = atari.act(state_l)
 
         # 5. Agent performs action
         next_state, reward, done, info = env.step(action)
 
         # 6. Remember
-        state_l = np.transpose((np.array(state)), (2, 0, 1))
         next_state_l = np.transpose((np.array(next_state)), (2, 0, 1))
 
 
-        atari.cache(state, next_state, action, reward, done)
+        atari.cache(state_l, next_state_l, action, reward, done)
 
         # 7. Learn
         q, loss = atari.learn()
@@ -71,7 +72,7 @@ for e in range(episodes):
         logger.log_step(reward, loss, q)
 
         # 9. Update state
-        state = next_state
+        state_l = next_state_l
 
         # 10. Check if end of game
         if done:
