@@ -14,12 +14,15 @@ class ATARI:
         self.batch_size = 32
 
         self.exploration_rate = 1
-        self.exploration_rate_decay = 0.99999975
         self.exploration_rate_min = 0.1
+        self.eps_num_random_action = 50000 #(in steps)
+        self.eps_num_explor_exploit = 1000000.0 #(in steps)
+        self.eps_interval = (self.exploration_rate - self.exploration_rate_min) / self.eps_num_explor_exploit
+        self.exploration_rate_decay = 0.99999975
         self.gamma = 0.9
 
         self.curr_step = 0
-        self.burnin = 1e5  # min. experiences before training
+        self.burnin = 12800 # min. experiences before training
         self.learn_every = 4   # no. of experiences between updates to Q_online
         self.sync_every = 1e4   # no. of experiences between Q_target & Q_online sync
 
@@ -59,8 +62,13 @@ class ATARI:
             action_values = self.net(state, model='online')
             action_idx = torch.argmax(action_values, axis=1).item()
 
+        if(curr_step < self.eps_num_random_action):
+          self.exploration_rate = 1
+        else:
+          self.exploration_rate -= self.eps_interval
+        
         # decrease exploration_rate
-        self.exploration_rate *= self.exploration_rate_decay
+        #self.exploration_rate *= self.exploration_rate_decay
         self.exploration_rate = max(self.exploration_rate_min, self.exploration_rate)
 
         # increment step

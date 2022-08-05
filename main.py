@@ -47,7 +47,6 @@ for e in range(episodes):
     state_l = np.transpose((np.array(state)), (2, 0, 1))
     # Play the game!
     while True:
-
         # 3. Show environment (the visual) [WIP]
         # env.render()
 
