@@ -19,7 +19,7 @@ class ATARI:
         self.eps_num_explor_exploit = 1000000.0 #(in steps)
         self.eps_interval = (self.exploration_rate - self.exploration_rate_min) / self.eps_num_explor_exploit
         self.exploration_rate_decay = 0.99999975
-        self.gamma = 0.9
+        self.gamma = 0.99
 
         self.curr_step = 0
         self.burnin = 12800 # min. experiences before training

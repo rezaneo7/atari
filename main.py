@@ -20,7 +20,6 @@ from agent import ATARI
 from wrappers import ResizeObservation, SkipFrame, make_atari, wrap_deepmind
 
 
-env = gym.make("BreakoutNoFrameskip-v4")
 
 # Use the Baseline Atari environment because of Deepmind helper functions
 env = make_atari("BreakoutNoFrameskip-v4")
@@ -61,6 +60,7 @@ for e in range(episodes):
         # 6. Remember
         next_state_l = np.transpose((np.array(next_state)), (2, 0, 1))
 
+        if done: reward = -1
 
         atari.cache(state_l, next_state_l, action, reward, done)
 
